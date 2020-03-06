@@ -144,7 +144,8 @@ Numar_Complex Vector_Complex::Sum_Vector() {
 
 Numar_Complex Vector_Complex::Prod_Scalar(Vector_Complex const& a) {
 	Numar_Complex prod;
-	for (int i = 0; i < a.len; i++)
-		prod = prod + a.v[i] * v[i];
+	if(len == a.len)
+		for (int i = 0; i < a.len; i++)
+			prod = prod + a.v[i] * v[i];
 	return prod;
 }
