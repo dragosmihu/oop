@@ -8,25 +8,13 @@ ifstream fin("TextFile1.txt");
 class Numar_Complex {
 	double re, im;
 public:
-	Numar_Complex() { this->im = 0; this->re = 0; }
-	Numar_Complex(Numar_Complex const &n){
-			this->re = n.re;
-			this->im = n.im;
-		}
-	~Numar_Complex() = default;
+	Numar_Complex() { im = 0; re = 0; }
+	Numar_Complex(Numar_Complex const& n) { re = n.re; im = n.im; }
+	~Numar_Complex() { im = 0; re = 0; }
 	double Modul();
-	Numar_Complex operator + (Numar_Complex const& obj) {
-		Numar_Complex res;
-		res.re = this->re + obj.re;
-		res.im = this->im + obj.im;
-		return res;
-	}
-	Numar_Complex operator *(Numar_Complex const& obj) {
-		Numar_Complex res;
-		res.re = this->re * obj.re - this->im * obj.im;
-		res.im = this->re * obj.im + this->im * obj.re;
-		return res;
-	}
+	Numar_Complex operator + (Numar_Complex const& obj);
+	Numar_Complex operator *(Numar_Complex const& obj);
+	void operator =(const Numar_Complex& x);
 	friend ostream& operator <<(ostream& out, Numar_Complex const& obj) {
 		out << obj.re << " + i * " << obj.im;
 		return out;
@@ -35,29 +23,25 @@ public:
 		in >> obj.re >> obj.im;
 		return in;
 	}
-	void operator =(const Numar_Complex& x) {
-		this->re = x.re;
-		this->im = x.im;
-	}
 };
 
 class Vector_Complex : public Numar_Complex {
 	int len;
 	Numar_Complex* v;
+
 public:
 	Vector_Complex();
 	Vector_Complex(Numar_Complex const &x, int n);
 	Vector_Complex(Vector_Complex &w);
-	~Vector_Complex() {
-		delete[]v;
-	}
+	~Vector_Complex() { delete[]v; }
+
 	double* Get_VectorOfModules();
-	int Get_Len() {
-		return len;
-	}
+	int Get_Len() {return len;}
 	void Sort();
+
 	Numar_Complex Sum_Vector();
 	Numar_Complex Prod_Scalar(Vector_Complex const&a);
+
 	friend ostream& operator <<(ostream& out, Vector_Complex const& w) {
 		out << w.len << "\n";
 		for (int i = 0; i < w.len; i++)
@@ -77,25 +61,48 @@ public:
 int main()
 {
     Vector_Complex Vec, Vec2;
+
 	fin >> Vec;
 	cout << Vec << "\n"<< Vec.Sum_Vector() << "\n";
+
 	double* p = Vec.Get_VectorOfModules();
 	int n = Vec.Get_Len();
+
 	for (int i = 0; i < n; i++, p++)
 		cout << *p << ", ";
 	p -= n;
 	delete[] p;
+
 	Vec.Sort();
 	cout << Vec<< "\n";
 	fin >> Vec2;
 	cout << Vec.Prod_Scalar(Vec2);
+
 	return 0;
 }
 
-
-double Numar_Complex::Modul() {
-	return sqrt(this->re * this->re + this->im * this->im);
+Numar_Complex  Numar_Complex::operator + (Numar_Complex const& obj) {
+	Numar_Complex res;
+	res.re = re + obj.re;
+	res.im = im + obj.im;
+	return res;
 }
+
+Numar_Complex Numar_Complex::operator *(Numar_Complex const& obj) {
+	Numar_Complex res;
+	res.re = re * obj.re - im * obj.im;
+	res.im = re * obj.im + im * obj.re;
+	return res;
+}
+
+void Numar_Complex::operator =(const Numar_Complex& x) {
+	re = x.re;
+	im = x.im;
+}
+double Numar_Complex::Modul() {
+	return sqrt(re * re + im * im);
+}
+
 
 Vector_Complex::Vector_Complex() {
 	len = 0;
